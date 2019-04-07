@@ -198,6 +198,7 @@ string inferJson = FuzzyLogic<ModelToInfere>.GetInferenceResult(_expressionArg, 
 ```
 ### 3.3) Dependecies
 To add Fuzzy Logic Api as an Assembly or like classes inner in your Visual Studio project, you'll need to install [System.Linq.Dynamic](https://archive.codeplex.com/?p=dynamiclinq) dll, that can be installed by [nuget](https://www.nuget.org/packages/System.Linq.Dynamic/) reference or execute command on Nuget Package Console (Install-Package System.Linq.Dynamic).
+
 ----------------------
 ## License
 
