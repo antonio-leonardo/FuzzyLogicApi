@@ -2,7 +2,7 @@
 This Api executes inferences by fuzzy logic concept on C# Plain Old CLR Object associating an [Expression](https://docs.microsoft.com/en-us/dotnet/api/system.linq.expressions.expression) object defined in native .NET Framework.
 
 ## 1) Before you begin: Abstraction
-If do you want to delve into Fuzzy Logic theory (such as mathematical theorems, postulates, and Morgan's law) it's strongly recommended to look for other references to satisfy your curiosity and / or need for research. Through here this git post, you'll access only a practical example to execute the Fuzzy Logic in real world applications.
+If do you want to delve into [Fuzzy Logic](https://plato.stanford.edu/entries/logic-fuzzy/) theory (such as mathematical theorems, postulates, and [Morgan's law](https://en.wikipedia.org/wiki/De_Morgan%27s_laws)) it's strongly recommended to look for other references to satisfy your curiosity and / or need for research. Through here this git post, you'll access only a practical example to execute the Fuzzy Logic in real world applications.
 
 ## 2) Fuzzy Logic Concepts
 This figure from [tutorialspoint](https://www.tutorialspoint.com/fuzzy_logic/fuzzy_logic_introduction.htm) site resumes the real concept of Fuzzy Logic: Nothing is absolutily true or false (for Fuzzy Logic); between 0 and 1 you have a interval from these extremes, beyond the limits of the boolean logic.
@@ -26,6 +26,15 @@ public class HonestAssesment
 
     [XmlElement]
     public int JusticeSensePercentage { get; set; }
+    
+    [XmlElement]
+    public int MistakesPercentage
+    { 
+    	get
+	{
+	    return ((100-IntegrityPercentage) + (100-TruthPercentage) + (100-JusticeSensePercentage))/3;
+	}
+    }
 }
 
 static Expression<Func<HonestAssesment, bool>> _honestyProfile = (hp) =>
@@ -35,7 +44,7 @@ static Expression<Func<HonestAssesment, bool>> _honestyProfile = (hp) =>
 (h.IntegrityPercentage > 65 && h.JusticeSensePercentage > 100 && h.TruthPercentage > 95); //Last group
 
 ```
-The boolean broken is a capacity derived from [System.Linq.Expressions.Expression](https://docs.microsoft.com/en-us/dotnet/api/system.linq.expressions.expression) class, converting any block of code to representational string; the derived class who will auxiliate with this job is [BinaryExpression](https://docs.microsoft.com/pt-br/dotnet/api/system.linq.expressions.binaryexpression?view=netframework-4.7.2): the boolean expression will be sliced in binary tree of smaller boolean expression, whose rule will prioritize the slice where the conditional expression is contained 'or, then sliced by 'and' conditional expression
+The boolean broken is a capacity derived from [System.Linq.Expressions.Expression](https://docs.microsoft.com/en-us/dotnet/api/system.linq.expressions.expression) class, converting any block of code to representational string; the derived class who will auxiliate with this job is [BinaryExpression](https://docs.microsoft.com/pt-br/dotnet/api/system.linq.expressions.binaryexpression?view=netframework-4.7.2): the boolean expression will be sliced in binary tree of smaller boolean expression, whose rule will prioritize the slice where the conditional expression is contained 'or, then sliced by 'and' conditional expression (about the theory used of this complex binary expression, view articles like [Many-Valued Logic](https://plato.stanford.edu/entries/logic-manyvalued/) or [Crisp Logic](https://blog.oureducation.in/tag/crisp-logic/)/[Classical Logic](https://plato.stanford.edu/entries/logic-classical/))
 ```cs
 //First group of assesment:
 h.IntegrityPercentage > 75;
