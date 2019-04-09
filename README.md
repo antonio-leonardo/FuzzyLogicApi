@@ -12,7 +12,7 @@ This figure from [tutorialspoint](https://www.tutorialspoint.com/fuzzy_logic/fuz
 ## 3) The API
 
 ### 3.1) Core flow
-The core concept had the first requirement: Defuzzyfication. In other words, generate a Fuzzy Logic results by [Crisp Input](https://blog.oureducation.in/tag/crisp-logic/) expression builded on Fuzzy Logic Engine:
+The core concept had the first requirement: Defuzzyfication. In other words, generate a Fuzzy Logic results by [Crisp Input](https://blog.oureducation.in/tag/crisp-logic/) expression builded on Fuzzy Logic Engine (view figure bellow, from [Wikepdia](https://es.wikipedia.org/wiki/Defuzzificaci%C3%B3n) reference):
 
 ![From: https://es.wikipedia.org/wiki/Defuzzificaci%C3%B3n](https://upload.wikimedia.org/wikipedia/commons/2/22/Fuzzy_logic.png)
 
