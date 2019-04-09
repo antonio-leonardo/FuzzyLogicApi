@@ -2,7 +2,7 @@
 This Api executes inferences by fuzzy logic concept on C# Plain Old CLR Object associating an [Expression](https://docs.microsoft.com/en-us/dotnet/api/system.linq.expressions.expression) object defined in native .NET Framework.
 
 ## 1) Before you begin: Abstraction
-If do you want to delve into [Fuzzy Logic](https://plato.stanford.edu/entries/logic-fuzzy/) theory (such as mathematical theorems, postulates, and [Morgan's law](https://en.wikipedia.org/wiki/De_Morgan%27s_laws)) it's strongly recommended to look for other references to satisfy your curiosity and / or need for research. Through here this git post, you'll access only a practical example to execute the Fuzzy Logic in real world applications.
+If do you want to delve into [Fuzzy Logic](https://plato.stanford.edu/entries/logic-fuzzy/) theory (such as mathematical theorems, postulates, and [Morgan's law](https://en.wikipedia.org/wiki/De_Morgan%27s_laws)) it's strongly recommended to look for other references to satisfy your curiosity and / or need for research. Through here this git post, you'll access only a practical example to execute the Fuzzy Logic in real world applications; then, the focus in this article is not diving on philosophical dialogue with only a pratical porpuse.
 
 ## 2) Fuzzy Logic Concepts
 This figure from [tutorialspoint](https://www.tutorialspoint.com/fuzzy_logic/fuzzy_logic_introduction.htm) site resumes the real concept of Fuzzy Logic: Nothing is absolutily true or false (for Fuzzy Logic); between 0 and 1 you have a interval from these extremes, beyond the limits of the boolean logic.
@@ -12,7 +12,13 @@ This figure from [tutorialspoint](https://www.tutorialspoint.com/fuzzy_logic/fuz
 ## 3) The API
 
 ### 3.1) Core flow
-The core concept had the first requirement: break apart any complex boolean expression that resolves a logical boolean problem in minor boolean parts. Based on illustrative example above, let's create a Model class that represents the Honest charater like integrity, truth and justice sense percentage assesment for all and a boolean expression object that identifies the Honesty Profile, considering the minimal percentage to be a honest person (Please, the focus in this artiucle is not diving on philosophical dialogue on hosnet mean, this has only a pratical purpose):
+The core concept had the first requirement: Defuzzyfication. In other words, generate a Fuzzy Logic results by [Crisp Input](https://blog.oureducation.in/tag/crisp-logic/) expression builded on Fuzzy Logic Engine:
+
+![From: https://es.wikipedia.org/wiki/Defuzzificaci%C3%B3n](https://upload.wikimedia.org/wikipedia/commons/2/22/Fuzzy_logic.png)
+
+The rule of Fuzzy Logic Engine is: break apart any complex boolean expression (crisp input) that resolves a logical boolean problem in minor boolean parts rule (about the theory used of this complex boolean expression, view articles like [Many-Valued Logic](https://plato.stanford.edu/entries/logic-manyvalued/) or /[Classical Logic](https://plato.stanford.edu/entries/logic-classical/)).
+
+Based on illustrative example above, let's create a Model class that represents the Honest charater like integrity, truth and justice sense percentage assesment for all and a boolean expression object that identifies the Honesty Profile, considering the minimal percentage to be a honest person:
 
 ```cs
 [Serializable, XmlRoot]
@@ -44,7 +50,7 @@ static Expression<Func<HonestAssesment, bool>> _honestyProfile = (hp) =>
 (h.IntegrityPercentage > 65 && h.JusticeSensePercentage > 100 && h.TruthPercentage > 95); //Last group
 
 ```
-The boolean broken is a capacity derived from [System.Linq.Expressions.Expression](https://docs.microsoft.com/en-us/dotnet/api/system.linq.expressions.expression) class, converting any block of code to representational string; the derived class who will auxiliate with this job is [BinaryExpression](https://docs.microsoft.com/pt-br/dotnet/api/system.linq.expressions.binaryexpression?view=netframework-4.7.2): the boolean expression will be sliced in binary tree of smaller boolean expression, whose rule will prioritize the slice where the conditional expression is contained 'or, then sliced by 'and' conditional expression (about the theory used of this complex binary expression, view articles like [Many-Valued Logic](https://plato.stanford.edu/entries/logic-manyvalued/) or [Crisp Logic](https://blog.oureducation.in/tag/crisp-logic/)/[Classical Logic](https://plato.stanford.edu/entries/logic-classical/))
+The boolean expression broken is one capacity derived from [System.Linq.Expressions.Expression](https://docs.microsoft.com/en-us/dotnet/api/system.linq.expressions.expression) class, converting any block of code to representational string; the derived class who will auxiliate with this job is [BinaryExpression](https://docs.microsoft.com/pt-br/dotnet/api/system.linq.expressions.binaryexpression?view=netframework-4.7.2): the boolean expression will be sliced in binary tree of smaller boolean expression, whose rule will prioritize the slice where the conditional expression is contained 'or, then sliced by 'and' conditional expression.
 ```cs
 //First group of assesment:
 h.IntegrityPercentage > 75;
