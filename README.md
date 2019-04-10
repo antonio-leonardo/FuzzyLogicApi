@@ -50,7 +50,7 @@ static Expression<Func<HonestAssesment, bool>> _honestyProfile = (hp) =>
 (h.IntegrityPercentage > 65 && h.JusticeSensePercentage > 100 && h.TruthPercentage > 95); //Last group
 
 ```
-The boolean expression broken is one capacity derived from [System.Linq.Expressions.Expression](https://docs.microsoft.com/en-us/dotnet/api/system.linq.expressions.expression) class, converting any block of code to representational string; the derived class who will auxiliate with this job is [BinaryExpression](https://docs.microsoft.com/pt-br/dotnet/api/system.linq.expressions.binaryexpression?view=netframework-4.7.2): the boolean expression will be sliced in binary tree of smaller boolean expression, whose rule will prioritize the slice where the conditional expression is contained 'or, then sliced by 'and' conditional expression.
+The boolean expression broken is one capacity derived from [System.Linq.Expressions.Expression](https://docs.microsoft.com/en-us/dotnet/api/system.linq.expressions.expression) class, converting any block of code to representational string; the derived class who will auxiliate with this job is [BinaryExpression](https://docs.microsoft.com/pt-br/dotnet/api/system.linq.expressions.binaryexpression?view=netframework-4.7.2): the boolean expression will be sliced in binary tree of smaller boolean expression, whose rule will prioritize the slice where the conditional expression is contained 'OR', then sliced by 'AND' conditional expression.
 ```cs
 //First group of assesment:
 h.IntegrityPercentage > 75;
