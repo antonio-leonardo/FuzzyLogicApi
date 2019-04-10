@@ -2,7 +2,7 @@
 This Api executes inferences by fuzzy logic concept on C# Plain Old CLR Object associating an [Expression](https://docs.microsoft.com/en-us/dotnet/api/system.linq.expressions.expression) object defined in native .NET Framework.
 
 ## 1) Before you begin: Abstraction
-If do you want to delve into [Fuzzy Logic](https://plato.stanford.edu/entries/logic-fuzzy/) theory (such as mathematical theorems, postulates, and [Morgan's law](https://en.wikipedia.org/wiki/De_Morgan%27s_laws)) it's strongly recommended to look for other references to satisfy your curiosity and / or need for research. Through here this git post, you'll access only a practical example to execute the Fuzzy Logic in real world applications; then, the focus in this article is not diving on philosophical dialogue with only a pratical porpuse.
+If do you want to delve into [Fuzzy Logic](https://plato.stanford.edu/entries/logic-fuzzy/) theory (such as mathematical theorems, postulates, and [Morgan's law](https://en.wikipedia.org/wiki/De_Morgan%27s_laws)) it's strongly recommended to look for other references to satisfy your curiosity and / or your research need. Through here this git post, you'll access only a practical example to execute the Fuzzy Logic in real world applications; then, the focus in this article is not diving on philosophical dialogue with only a pratical porpuse.
 
 ## 2) Fuzzy Logic Concepts
 This figure from [tutorialspoint](https://www.tutorialspoint.com/fuzzy_logic/fuzzy_logic_introduction.htm) site resumes the real concept of Fuzzy Logic: Nothing is absolutily true or false (for Fuzzy Logic); between 0 and 1 you have a interval from these extremes, beyond the limits of the boolean logic.
