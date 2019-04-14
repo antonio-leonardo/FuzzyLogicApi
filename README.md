@@ -9,7 +9,7 @@ This figure from [tutorialspoint](https://www.tutorialspoint.com/fuzzy_logic/fuz
 
 ![From: https://www.tutorialspoint.com/fuzzy_logic/fuzzy_logic_introduction.htm](https://www.tutorialspoint.com/fuzzy_logic/images/fuzzy_logic_introduction.jpg)
 
-## 3) The API
+## 3) Using the API
 
 ### 3.1) Core flow
 The core concept had the first requirement: Defuzzyfication. In other words, generate a Fuzzy Logic results by [Crisp Input](https://blog.oureducation.in/tag/crisp-logic/) expression builded on Fuzzy Logic Engine (view figure bellow, from [Wikepdia](https://es.wikipedia.org/wiki/Defuzzificaci%C3%B3n) reference):
@@ -83,8 +83,8 @@ HonestAssesment profile1 = new HonestAssesment()
 };
 string infer_profile1 = FuzzyLogic<HonestAssesment>.GetInferenceResult(_expression, ResponseType.Json, profile1);
 ```
+Look at "HitsPercentage" property. The inference on Profile 1, with 66% of Honest
 ```json
-//Look at "HitsPercentage" property. The inference on Profile 1, with 66% of Honest
 {
 	"ID": 0,
 	"HitsPercentage": "66%",
@@ -114,8 +114,8 @@ HonestAssesment profile2 = new HonestAssesment()
 };
 string infer_profile2 = FuzzyLogic<HonestAssesment>.GetInferenceResult(_expression, ResponseType.Json, profile2);
 ```
+The inference on Profile 2, with 33% of Honest, that is "Sometimes honest", like a tutorialspoint figure.
 ```json
-//The inference on Profile 2, with 33% of Honest, that is "Sometimes honest", like a tutorialspoint figure.
 {
 	"ID": 0,
 	"HitsPercentage": "33%",
@@ -146,8 +146,8 @@ HonestAssesment profile3 = new HonestAssesment()
 };
 string infer_profile3 = FuzzyLogic<HonestAssesment>.GetInferenceResult(_expression, ResponseType.Json, profile3);
 ```
+The inference on Profile 3, with 0% of Honest, that is "Extremely dishonest", like a figure above.
 ```json
-//The inference on Profile 3, with 0% of Honest, that is "Extremely dishonest", like a figure above.
 {
 	"ID": 0,
 	"HitsPercentage": "0%",
@@ -179,8 +179,8 @@ HonestAssesment profile4 = new HonestAssesment()
 };
 string infer_profile4 = FuzzyLogic<HonestAssesment>.GetInferenceResult(_expression, ResponseType.Json, profile4);
 ```
+The inference on Profile 4, with 100% of Honest, that is "Extremely honest", like a figure assesment.
 ```json
-//The inference on Profile 4, with 100% of Honest, that is "Extremely honest", like a figure assesment.
 {
 	"ID": 0,
 	"HitsPercentage": "100%",
