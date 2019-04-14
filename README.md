@@ -1,4 +1,4 @@
-# Fuzzy Logic Api
+# C# Fuzzy Logic Api
 This Api executes inferences by fuzzy logic concept on C# Plain Old CLR Object associating an [Expression](https://docs.microsoft.com/en-us/dotnet/api/system.linq.expressions.expression) object defined in native .NET Framework.
 
 ## 1) Before you begin: Abstraction
