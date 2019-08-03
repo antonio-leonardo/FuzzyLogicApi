@@ -81,7 +81,7 @@ HonestAssesment profile1 = new HonestAssesment()
     JusticeSensePercentage = 80,
     TruthPercentage = 70
 };
-string infer_profile1 = FuzzyLogic<HonestAssesment>.GetInferenceResult(_expression, ResponseType.Json, profile1);
+string inference_p1 = FuzzyLogic<HonestAssesment>.GetInferenceResult(_expression, ResponseType.Json, profile1);
 ```
 Look at "HitsPercentage" property. The inference on Profile 1, with 66% of Honest
 ```json
@@ -112,7 +112,7 @@ HonestAssesment profile2 = new HonestAssesment()
     JusticeSensePercentage = 63,
     TruthPercentage = 30
 };
-string infer_profile2 = FuzzyLogic<HonestAssesment>.GetInferenceResult(_expression, ResponseType.Json, profile2);
+string inference_p2 = FuzzyLogic<HonestAssesment>.GetInferenceResult(_expression, ResponseType.Json, profile2);
 ```
 The inference on Profile 2, with 33% of Honest, that is "Sometimes honest", like a tutorialspoint figure.
 ```json
@@ -144,7 +144,7 @@ HonestAssesment profile3 = new HonestAssesment()
     JusticeSensePercentage = 48,
     TruthPercentage = 30
 };
-string infer_profile3 = FuzzyLogic<HonestAssesment>.GetInferenceResult(_expression, ResponseType.Json, profile3);
+string inference_p3 = FuzzyLogic<HonestAssesment>.GetInferenceResult(_expression, ResponseType.Json, profile3);
 ```
 The inference on Profile 3, with 0% of Honest, that is "Extremely dishonest", like a figure above.
 ```json
@@ -177,7 +177,7 @@ HonestAssesment profile4 = new HonestAssesment()
     JusticeSensePercentage = 83,
     TruthPercentage = 81
 };
-string infer_profile4 = FuzzyLogic<HonestAssesment>.GetInferenceResult(_expression, ResponseType.Json, profile4);
+string inference_p4 = FuzzyLogic<HonestAssesment>.GetInferenceResult(_expression, ResponseType.Json, profile4);
 ```
 The inference on Profile 4, with 100% of Honest, that is "Extremely honest", like a figure assesment.
 ```json
