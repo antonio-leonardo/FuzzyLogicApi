@@ -44,7 +44,7 @@ public class HonestAssesment
 }
 
 //Crisp Logic expression that represents Honesty Profiles:
-static Expression<Func<HonestAssesment, bool>> _honestyProfile = (hp) =>
+static Expression<Func<HonestAssesment, bool>> _honestyProfile = (h) =>
 (h.IntegrityPercentage > 75 && h.JusticeSensePercentage > 75 && h.TruthPercentage > 75) || //First group
 (h.IntegrityPercentage > 90 && h.JusticeSensePercentage > 60 && h.TruthPercentage > 50) || //Second group
 (h.IntegrityPercentage > 70 && h.JusticeSensePercentage > 90 && h.TruthPercentage > 80) || //Third group
