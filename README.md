@@ -159,7 +159,6 @@ string inferenceAllProfiles = FuzzyLogic<HonestAssesment>.GetInference(_honestyP
 Inferences with all Profiles, in XML:
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
-<?xml version="1.0" encoding="utf-8"?>
 <InferenceResultOfHonestAssesment>
   <Inferences>
     <PropertiesNeedToChange>IntegrityPercentage</PropertiesNeedToChange>
