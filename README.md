@@ -140,7 +140,9 @@ var inference_p3 = FuzzyParallel.FuzzyLogic<HonestAssesment>.GetInference(_hones
 ```
 The inference on Profile 3, with 0% of Honest, that is "Extremely dishonest", like a figure above.
 --Result of "inference_p3" Api Model variable (like "Inference<HonestAssesment" object) in imagem bellow:
-![From: https://raw.githubusercontent.com/antonio-leonardo/FuzzyLogicApi/master/FuzzyProfile3.PNG)
+
+![From: https://github.com/antonio-leonardo/FuzzyLogicApi](https://raw.githubusercontent.com/antonio-leonardo/FuzzyLogicApi/master/FuzzyProfile3.PNG)
+
 ```cs
 HonestAssesment profile4 = new HonestAssesment()
 {
@@ -227,7 +229,7 @@ To add Fuzzy Logic Api as an Assembly or like classes inner in your Visual Studi
 ----------------------
 ## Award
 
-Voted the Best Article of June/2019 by [Code Project](https://www.codeproject.com/Articles/5092762/Csharp-Fuzzy-Logic-API)
+Voted the Best Article of June/2019 by [Code Project](https://www.codeproject.com/Competitions/1082/Best-Article-of-June-2019.aspx#winners)
 
 ----------------------
 ## License
