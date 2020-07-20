@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Linq.Expressions;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
-
 using DynamicLinq = System.Linq.Dynamic;
 
 namespace FuzzyLogicApi
@@ -23,37 +24,12 @@ namespace FuzzyLogicApi
         /// <summary>
         /// 
         /// </summary>
-        private static TEntity[] Collection { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        private readonly Func<TEntity, bool> _function;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        private readonly Predicate<TEntity> _predicate;
-
-        /// <summary>
-        /// 
-        /// </summary>
         private readonly string[] _propertiesNames;
 
         /// <summary>
         /// 
         /// </summary>
-        private Predicate<TEntity> _negatePredicate { get { return x => !_predicate(x); } }
-
-        /// <summary>
-        /// 
-        /// </summary>
         private readonly Expression<Func<TEntity, bool>> _expression;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        private InferenceResult<TEntity> InferenceResult { get; set; }
 
         /// <summary>
         /// 
@@ -79,24 +55,116 @@ namespace FuzzyLogicApi
         /// 
         /// </summary>
         /// <param name="expression"></param>
+        /// <param name="type"></param>
+        /// <param name="entityItem"></param>
+        /// <returns></returns>
+        public static string GetInference(Expression<Func<TEntity, bool>> expression, ResponseType type, IEnumerable<TEntity> entities)
+        {
+            string result = null;
+            InferenceResult<TEntity> inferences = new InferenceResult<TEntity>()
+            {
+                Inferences = (new FuzzyLogic<TEntity>(expression)).InferenceEntities(entities).ToArray()
+            };
+            switch (type)
+            {
+                case ResponseType.Xml:
+                    result = inferences.XmlSerialize();
+                    break;
+                case ResponseType.Json:
+                    result = inferences.JsonSerialize();
+                    break;
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entities"></param>
+        /// <returns></returns>
+        private IEnumerable<Inference<TEntity>> InferenceEntities(IEnumerable<TEntity> entities)
+        {
+            foreach (TEntity entity in entities)
+            {
+                InferenceInternal<TEntity> inferenceResultInternal = this.GetBruteInferenceCollection(entity);
+                yield return inferenceResultInternal.InternalToPublicConversion();
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <param name="type"></param>
+        /// <param name="entityItem"></param>
+        /// <returns></returns>
+        public static InferenceResult<TEntity> GetInference(Expression<Func<TEntity, bool>> expression, IEnumerable<TEntity> entities)
+        {
+            return new InferenceResult<TEntity>()
+            {
+                Inferences = (new FuzzyLogic<TEntity>(expression)).InferenceEntities(entities).ToArray()
+            };
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <param name="type"></param>
+        /// <param name="entityItem"></param>
+        /// <returns></returns>
+        public static string GetInference(Expression<Func<TEntity, bool>> expression, ResponseType type, TEntity entityItem)
+        {
+            string result = null;
+            InferenceInternal<TEntity> InferenceResultInternal = (new FuzzyLogic<TEntity>(expression)).GetBruteInferenceCollection(entityItem);
+            Inference<TEntity> inferenceResult = InferenceResultInternal.InternalToPublicConversion();
+            switch (type)
+            {
+                case ResponseType.Xml:
+                    result = inferenceResult.XmlSerialize();
+                    break;
+                case ResponseType.Json:
+                    result = inferenceResult.JsonSerialize();
+                    break;
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <param name="entityItem"></param>
+        /// <returns></returns>
+        public static Inference<TEntity> GetInference(Expression<Func<TEntity, bool>> expression, TEntity entityItem)
+        {
+            return (new FuzzyLogic<TEntity>(expression)).GetBruteInferenceCollection(entityItem).InternalToPublicConversion();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="expression"></param>
         private FuzzyLogic(Expression<Func<TEntity, bool>> expression)
         {
-            this._function = expression.Compile();
-            this._predicate = (entity) => this._function.Invoke(entity);
             this._expression = expression;
-
             this.GetBrokedBooleanExpressionsByOrOperator();
-
             this.ExpressionParameters = this.GetExpressionParameters().ToArray();
-            this.ParametersCollection = _expression.Parameters;
+            this.ParametersCollection = this._expression.Parameters;
+            this._propertiesNames = this.GetPropertiesNames().ToArray();
+        }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        private IEnumerable<string> GetPropertiesNames()
+        {
             PropertyInfo[] props = this.TypeOf.GetProperties();
-            List<string> propsNames = new List<string>();
             for (int i = 0; i < props.Length; i++)
             {
-                propsNames.Add(props[i].Name);
+                yield return props[i].Name;
             }
-            this._propertiesNames = propsNames.ToArray();
         }
 
         /// <summary>
@@ -117,134 +185,10 @@ namespace FuzzyLogicApi
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="expression"></param>
-        /// <param name="type"></param>
-        /// <param name="collection"></param>
-        /// <returns></returns>
-        public static string GetInferenceResult(Expression<Func<TEntity, bool>> expression, ResponseType type, List<TEntity> collection)
-        {
-            Collection = collection.ToArray();
-            return (new FuzzyLogic<TEntity>(expression)).GetInferenceResult(type);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="expression"></param>
-        /// <param name="collection"></param>
-        public static string GetInferenceResult(Expression<Func<TEntity, bool>> expression, ResponseType type, params TEntity[] collection)
-        {
-            Collection = collection;
-            return (new FuzzyLogic<TEntity>(expression)).GetInferenceResult(type);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="expression"></param>
-        /// <param name="collection"></param>
-        /// <returns></returns>
-        public static InferenceResult<TEntity> GetInferenceResult(Expression<Func<TEntity, bool>> expression, params TEntity[] collection)
-        {
-            Collection = collection;
-            return (new FuzzyLogic<TEntity>(expression)).GetInferenceResult();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="expression"></param>
-        /// <param name="collection"></param>
-        /// <returns></returns>
-        public static InferenceResult<TEntity> GetInferenceResult(Expression<Func<TEntity, bool>> expression, List<TEntity> collection)
-        {
-            Collection = collection.ToArray();
-            return (new FuzzyLogic<TEntity>(expression)).GetInferenceResult();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="expression"></param>
-        /// <param name="type"></param>
-        /// <param name="entityItem"></param>
-        /// <returns></returns>
-        public static string GetInferenceResult(Expression<Func<TEntity, bool>> expression, ResponseType type, TEntity entityItem)
-        {
-            string result = null;
-            switch (type)
-            {
-                case ResponseType.Xml:
-                    result = (new FuzzyLogic<TEntity>(expression)).GetBruteInfereceCollection(entityItem, 0).XmlSerialize();
-                    break;
-                case ResponseType.Json:
-                    result = (new FuzzyLogic<TEntity>(expression)).GetBruteInfereceCollection(entityItem, 0).JsonSerialize();
-                    break;
-            }
-            return result;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="expression"></param>
-        /// <param name="entityItem"></param>
-        /// <returns></returns>
-        public static Inferecence<TEntity> GetInferenceResult(Expression<Func<TEntity, bool>> expression, TEntity entityItem)
-        {
-            return (new FuzzyLogic<TEntity>(expression)).GetBruteInfereceCollection(entityItem, 0);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        private string GetInferenceResult(ResponseType type)
-        {
-            string returning = null;
-            if (null == this.InferenceResult)
-            {
-                Inferecence<TEntity>[] inferences = this.GenerateInferenceCollection().ToArray();
-                this.InferenceResult = new InferenceResult<TEntity>()
-                {
-                    Inferences = inferences
-                };
-            }
-            switch (type)
-            {
-                case ResponseType.Xml:
-                    returning = this.InferenceResult.XmlSerialize();
-                    break;
-                case ResponseType.Json:
-                    returning = this.InferenceResult.JsonSerialize();
-                    break;
-            }
-            return returning;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        private InferenceResult<TEntity> GetInferenceResult()
-        {
-            InferenceResult<TEntity> result = new InferenceResult<TEntity>();
-            if (null == this.InferenceResult)
-            {
-                Inferecence<TEntity>[] inferences = this.GenerateInferenceCollection().ToArray();
-            }
-            result.Inferences = this.InferenceResult.Inferences;
-            return result;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <returns></returns>
         private IEnumerable<string> GetExpressionParameters()
         {
-            ReadOnlyCollection<ParameterExpression> externalParam = _expression.Parameters;
+            ReadOnlyCollection<ParameterExpression> externalParam = this._expression.Parameters;
             foreach (ParameterExpression item in externalParam)
             {
                 yield return item.Name;
@@ -254,39 +198,18 @@ namespace FuzzyLogicApi
         /// <summary>
         /// 
         /// </summary>
-        /// <returns></returns>
-        private IEnumerable<Inferecence<TEntity>> GenerateInferenceCollection()
-        {
-            TEntity[] notValidValues = this.FindAllNotValid().ToArray();
-            for (int i = 0; i < notValidValues.Length; i++)
-            {
-                yield return this.GetBruteInfereceCollection(notValidValues[i], i);
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <param name="entity"></param>
-        /// <param name="Id"></param>
         /// <returns></returns>
-        private Inferecence<TEntity> GetBruteInfereceCollection(TEntity entity, int Id)
+        private IEnumerable<IntermediateInferenceItemInternal> GetBruteInferenceCollectionIntermediate(TEntity entity)
         {
-            Inferecence<TEntity> result = new Inferecence<TEntity>();
-            result.RatingsReport = new List<bool>();
-            result.PropertiesNeedToChange = new List<string>();
-            result.Data = entity;
-            result.ID = Id;
-
-            List<IntermediateInferenceItem> intermediateInference = new List<IntermediateInferenceItem>();
             for (int i = 0; i < this.BrokedBooleanExpressionsByOrOperator.Length; i++)
             {
-                string[] breakApartExpressionByAndAlso = this.BrokedBooleanExpressionsByOrOperator[i].Split(new string[] { " AndAlso " }, StringSplitOptions.None);
-                IntermediateInferenceItem item = new IntermediateInferenceItem()
+                IntermediateInferenceItemInternal item = new IntermediateInferenceItemInternal()
                 {
                     PropertiesNeedToChange = new List<string>(),
                     RatingsReport = new List<bool>()
                 };
+                string[] breakApartExpressionByAndAlso = this.BrokedBooleanExpressionsByOrOperator[i].Split(new string[] { " AndAlso " }, StringSplitOptions.None);
                 for (int j = 0; j < breakApartExpressionByAndAlso.Length; j++)
                 {
                     for (int x = 0; x < this._propertiesNames.Length; x++)
@@ -302,9 +225,24 @@ namespace FuzzyLogicApi
                         }
                     }
                 }
-                intermediateInference.Add(item);
+                yield return item;
             }
-            IntermediateInferenceItem minErrors = intermediateInference.OrderBy(x => x.ErrorsQuantity).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        private InferenceInternal<TEntity> GetBruteInferenceCollection(TEntity entity)
+        {
+            InferenceInternal<TEntity> result = new InferenceInternal<TEntity>()
+            {
+                RatingsReport = new List<bool>(),
+                PropertiesNeedToChange = new List<string>(),
+                Data = entity
+            };
+            IntermediateInferenceItemInternal minErrors = GetBruteInferenceCollectionIntermediate(entity).OrderBy(x => x.ErrorsQuantity).FirstOrDefault();
             result.RatingsReport = minErrors.RatingsReport;
             result.PropertiesNeedToChange = minErrors.PropertiesNeedToChange;
             return result;
@@ -318,7 +256,7 @@ namespace FuzzyLogicApi
         /// <returns></returns>
         private bool ProcessFilter(string filter, TEntity invalidData, string propertyName)
         {
-            if(typeof(TEntity).GetProperty(propertyName).PropertyType == typeof(Double) && filter.Contains(","))
+            if (typeof(TEntity).GetProperty(propertyName).PropertyType == typeof(Double) && filter.Contains(","))
             {
                 filter = filter.Replace(",", ".");
             }
@@ -326,20 +264,25 @@ namespace FuzzyLogicApi
             const char FIRST_BRACKET = '(',
                        LAST_BRACKET = ')';
             string newFilter = filter;
-            List<int> charsIdWithStartParenteses = new List<int>();
-            List<int> charsIdWithEndParenteses = new List<int>();
+
+            ConcurrentBag<int> charsIdWithStartParentesesParallel = new ConcurrentBag<int>();
+            ConcurrentBag<int> charsIdWithEndParentesesParallel = new ConcurrentBag<int>();
             char[] filterChars = filter.ToCharArray();
-            for (int i = 0; i < filterChars.Length; i++)
+            Parallel.For(0, filterChars.Length, i =>
             {
                 if (filterChars[i] == FIRST_BRACKET)
                 {
-                    charsIdWithStartParenteses.Add(i);
+                    charsIdWithStartParentesesParallel.Add(i);
                 }
                 else if (filterChars[i] == LAST_BRACKET)
                 {
-                    charsIdWithEndParenteses.Add(i);
+                    charsIdWithEndParentesesParallel.Add(i);
                 }
-            }
+            });
+
+            List<int> charsIdWithStartParenteses = charsIdWithStartParentesesParallel.ToList();
+            List<int> charsIdWithEndParenteses = charsIdWithEndParentesesParallel.ToList();
+
             bool isMatch = false;
             while (!isMatch)
             {
@@ -387,19 +330,6 @@ namespace FuzzyLogicApi
         /// 
         /// </summary>
         /// <param name="filter"></param>
-        private void AddParametersOnFilter(ref string filter)
-        {
-            filter = " => " + filter;
-            for (int i = 0; i < ExpressionParameters.Length; i++)
-            {
-                filter = "(" + ExpressionParameters[i] + ")" + filter;
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="filter"></param>
         private void SubstituteChars(ref string filter)
         {
             filter = filter.Replace("IsNullOrWhiteSpace", "string.IsNullOrWhiteSpace")
@@ -409,7 +339,7 @@ namespace FuzzyLogicApi
             foreach (string item in this.ExpressionParameters)
             {
                 filter = filter.Replace(item + ".", "");
-                if (!(item.Length == 1 && (filter.Split(item.FirstOrDefault()).Length -1) > 1))
+                if (!(item.Length == 1 && (filter.Split(item.FirstOrDefault()).Length - 1) > 1))
                 {
                     filter.Replace(item, "");
                 }
@@ -485,25 +415,6 @@ namespace FuzzyLogicApi
                     finalExpressions.Add(tree.BinaryExpressionItem);
                 }
             }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public TEntity[] FindAllValids()
-        {
-            return Array.FindAll(Collection, this._predicate);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="comparer"></param>
-        /// <returns></returns>
-        public TEntity[] FindAllNotValid()
-        {
-            return Array.FindAll(Collection, this._negatePredicate);
         }
     }
 }
