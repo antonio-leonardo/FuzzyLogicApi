@@ -87,7 +87,7 @@ string inference_p1 = FuzzyLogic<HonestAssesment>.GetInference(_honestyProfile, 
 ```
 Look at "HitsPercentage" and "InferenceResult" properties.
 The inference on Profile 1, with 0.67 of Honest (1 is Extremely Honest).
--Result of "inference_p1" string variable (Json):
+-Result of "inference_p1" string variable (JSON):
 ```json
 {
     "ID":"72da723b-b879-474c-b2cc-6a11c5965b25",
@@ -113,7 +113,7 @@ HonestAssesment profile2 = new HonestAssesment()
 string inference_p2 = FuzzyLogic<HonestAssesment>.GetInference(_honestyProfile, ResponseType.Xml, profile2);
 ```
 The inference on Profile 2, with 33% of Honest, that is "Sometimes honest", like a tutorialspoint figure.
---Result of "inference_p2" string variable (Json):
+--Result of "inference_p2" string variable (XML):
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <InferenceOfHonestAssesment>
@@ -155,7 +155,7 @@ allProfiles.Add(profile3);
 allProfiles.Add(profile4);
 string inferenceAllProfiles = FuzzyLogic<HonestAssesment>.GetInference(_honestyProfile, ResponseType.Json, allProfiles);
 ```
-Inferences with all Profiles:
+Inferences with all Profiles, in XML:
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <?xml version="1.0" encoding="utf-8"?>
