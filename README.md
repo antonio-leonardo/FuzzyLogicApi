@@ -54,24 +54,24 @@ static Expression<Func<HonestAssesment, bool>> _honestyProfile = (h) =>
 The boolean expression broken is one capacity derived from [System.Linq.Expressions.Expression](https://docs.microsoft.com/en-us/dotnet/api/system.linq.expressions.expression) class, converting any block of code to representational string; the derived class who will auxiliate with this job is [BinaryExpression](https://docs.microsoft.com/pt-br/dotnet/api/system.linq.expressions.binaryexpression?view=netframework-4.7.2): the boolean expression will be sliced in binary tree of smaller boolean expression, whose rule will prioritize the slice where the conditional expression is contained 'OR', then sliced by 'AND' conditional expression.
 ```cs
 //First group of assesment:
-h.IntegrityPercentage > 0.75;
-h.JusticeSensePercentage > 0.75;
-h.TruthPercentage > 0.75;
+h.IntegrityPercentage > 75;
+h.JusticeSensePercentage > 75;
+h.TruthPercentage > 75;
 
 //Second group of assesment:
-h.IntegrityPercentage > 0.9;
-h.JusticeSensePercentage > 0.6;
-h.TruthPercentage > 0.5;
+h.IntegrityPercentage > 90;
+h.JusticeSensePercentage > 60;
+h.TruthPercentage > 50;
 
 //Third group of assesment:
-h.IntegrityPercentage > 0.7;
-h.JusticeSensePercentage > 0.9;
-h.TruthPercentage > 0.8;
+h.IntegrityPercentage > 70;
+h.JusticeSensePercentage > 90;
+h.TruthPercentage > 80;
 
 //Last group of assesment:
-h.IntegrityPercentage > 0.65;
-h.JusticeSensePercentage > 1;
-h.TruthPercentage > 0.95;
+h.IntegrityPercentage > 65;
+h.JusticeSensePercentage == 100;
+h.TruthPercentage > 95;
 ```
 
 This functionality contained in the .NET Framework is the trump card to mitigate the appraisal value that the evaluated profiles have conquered or how close they have come to reach any of the 4 defined valuation groups, for example:
