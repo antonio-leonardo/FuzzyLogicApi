@@ -131,11 +131,11 @@ The inference on Profile 2, with 33% of Honest, that is "Sometimes honest", like
 ```cs
 HonestAssesment profile3 = new HonestAssesment()
 {
-    Integrity = 0.46,
-    JusticeSense = 0.48,
-    Truth = 0.3
+    IntegrityPercentage = 46,
+    JusticeSensePercentage = 48,
+    TruthPercentage = 30
 };
-var inference_p3 = FuzzyParallel.FuzzyLogic<HonestAssesment>.GetInference(_honestyProfile, profile3);
+var inference_p3 = FuzzyLogic<HonestAssesment>.GetInference(_honestyProfile, profile3);
 ```
 The inference on Profile 3, with 0% of Honest, that is "Extremely dishonest", like a figure above.
 --Result of "inference_p3" Api Model variable (like "Inference<HonestAssesment" object) in imagem bellow:
@@ -145,16 +145,16 @@ The inference on Profile 3, with 0% of Honest, that is "Extremely dishonest", li
 ```cs
 HonestAssesment profile4 = new HonestAssesment()
 {
-    Integrity = 0.91,
-    JusticeSense = 0.83,
-    Truth = 0.81
+    IntegrityPercentage = 91,
+    JusticeSensePercentage = 83,
+    TruthPercentage = 81
 };
 List<HonestAssesment> allProfiles = new List<HonestAssesment>();
 allProfiles.Add(profile1);
 allProfiles.Add(profile2);
 allProfiles.Add(profile3);
 allProfiles.Add(profile4);
-string inferenceAllProfiles = FuzzyLogic<HonestAssesment>.GetInference(_honestyProfile, ResponseType.Json, allProfiles);
+string inferenceAllProfiles = FuzzyLogic<HonestAssesment>.GetInference(_honestyProfile, ResponseType.Xml, allProfiles);
 ```
 Inferences with all Profiles, in XML:
 ```xml
